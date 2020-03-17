@@ -6,8 +6,8 @@ from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
 # connect to MongoDB, change the << MONGODB URL >> to reflect your own connection string
-client = MongoClient("mongodb+srv://isaacmichaan1:11Yossef@cluster0-gvxqb.gcp.mongodb.net/test?retryWrites=true&w=majority")
-db=client.peopleList
+#client = MongoClient("mongodb+srv://:@cluster0-gvxqb.gcp.mongodb.net/test?retryWrites=true&w=majority")
+#db=client.peopleList
 
 raw_headers = '''User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101 Firefox/68.0
 Accept: application/vnd.linkedin.normalized+json+2.1
@@ -46,7 +46,7 @@ class Linkedin:
 			print(num, ele['text']['text'] + ' - ' + ele['type'])
 		id = self.choice(jres)
 		self.people(id)
-		self.save()
+		#self.save()
 
 	def people(self, id):
 		for i in range(1,11):
@@ -68,9 +68,9 @@ class Linkedin:
 			except:
 				pass
 
-	def save(self):
-		db.test.delete_many({})
-		db.test.insert_many(self.peopleList)
+	#def save(self):
+		#db.test.delete_many({})
+		#db.test.insert_many(self.peopleList)
 
 if __name__ == "__main__":
 	test = Linkedin()

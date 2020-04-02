@@ -134,7 +134,7 @@ class Subdomain:
 			resolver = args.r
 
 		if not args.t:
-			args.t = 1
+			args.t = 30
 
 		#create database
 		# mariadb_connection = mariadb.connect(user='root', password='toor')

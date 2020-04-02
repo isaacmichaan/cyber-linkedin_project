@@ -12,6 +12,7 @@ Referer: https://www.google.com/
 Cookie: CGIC=Ij90ZXh0L2h0bWwsYXBwbGljYXRpb24veGh0bWwreG1sLGFwcGxpY2F0aW9uL3htbDtxPTAuOSwqLyo7cT0wLjg; NID=197=E-4YOt-eDGaujR68iLrzNVD1PhmVWpjLEQF7jUMq4f-Xkx>
 Connection: keep-alive'''
 
+
 class Google:
 	def __init__(self):
 		self.headers = headers_parser(headers)
@@ -21,11 +22,12 @@ class Google:
 	def search(self):
 		site = input("Enter site: ")
 		intext = input("Enter intext: ")
+		text = 'site:' + site + ' ' + 'intext:' + intext
 		pages = input("How many pages?")
 		start = 0
 		for i in range(int(pages)):
 			print(f"Page number {i+1}")
-			print(self.google_search(site, intext, str(start)))
+			print(self.google_search(text, intext, str(start)))
 			start = int(start) + 10
 
 	def extract_links(self, html, intext):
@@ -36,8 +38,12 @@ class Google:
 			self.emails.append(email)
 			print(email)
 
-	def google_search(self, site, intext, start='0'):
-		text = 'site:' + site + ' ' + 'intext:' + intext
+	def save(self):
+		f = open('Google_Results.txt', 'w')
+		f.write(str(self.emails))
+		f.close()
+
+	def google_search(self, text, intext, start='0'):
 		newparams = {
 			'q': text,
 			'oq': text,
@@ -45,6 +51,8 @@ class Google:
 		}
 		response = requests.get(self.url, params=newparams, headers=headers_parser(headers))
 		self.extract_links(response.text, intext)
+		self.save()
+
 
 if __name__ == "__main__":
 	search = Google()

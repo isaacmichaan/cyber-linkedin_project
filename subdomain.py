@@ -6,6 +6,7 @@ import sys
 from queue import Queue
 import mysql.connector as mariadb
 import socket
+from port import ports
 
 MAX_SUBDOMAIN_LENGTH = 63
 FILEMODE_READ = "r"
@@ -61,11 +62,16 @@ class Subdomain:
 					reversed_dns = socket.gethostbyaddr(str(answers))
 				except:
 					reversed_dns.append('')
+					
+				try:
+					open_ports = str(ports(answers))
+				except:
+					pass
 
-				val = (domain, str(answers), reversed_dns[0])
+				val = (domain, str(answers), reversed_dns[0], open_ports)
 
 				try:
-					self.cursor.execute("INSERT INTO servers (domain, address, reverse_dns) VALUES (%s, %s, %s)", val)
+					self.cursor.execute("INSERT INTO servers (domain, address, reverse_dns, ports) VALUES (%s, %s, %s, %s)", val)
 					self.mariadb_connection.commit()
 				except:
 					pass
@@ -147,7 +153,7 @@ class Subdomain:
 		#create table
 		self.mariadb_connection = mariadb.connect(user='root', password='toor', database=databases)
 		self.cursor = self.mariadb_connection.cursor()
-		sql = "CREATE OR REPLACE TABLE servers (domain VARCHAR(1000) NOT NULL, address VARCHAR(1000) NOT NULL, reverse_dns VARCHAR(1000))"
+		sql = "CREATE OR REPLACE TABLE servers (domain VARCHAR(1000) NOT NULL, address VARCHAR(1000) NOT NULL, reverse_dns VARCHAR(1000), ports VARCHAR(1000))"
 		self.cursor.execute(sql)
 
 		try:
